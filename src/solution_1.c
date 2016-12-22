@@ -34,7 +34,7 @@ bool solution_1(void) {
 	struct Data data = { .sem = sema_create(0) };
 	buf_init(&data.buf, 2);
 
-	// Create threads.
+	// Create and run threads.
 	pthread_t thread_a, thread_b;
 	pthread_create(&thread_a, NULL, run_a, &data);
 	pthread_create(&thread_b, NULL, run_b, &data);

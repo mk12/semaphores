@@ -48,7 +48,7 @@ bool buf_eq(struct Buffer *buf, const char* s) {
 
 bool buf_range_eq(struct Buffer *buf, size_t i, size_t j, const char* s) {
 	assert(i <= j);
-	assert(j < buf->cap);
+	assert(j <= buf->cap);
 	return strlen(s) == j - i &&
 		strncmp((const char *)(buf->arr + i), s, j - i) == 0;
 }
