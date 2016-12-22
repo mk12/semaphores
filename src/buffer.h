@@ -4,9 +4,10 @@
 #define BUFFER_H
 
 #include <pthread.h>
+#include <stdbool.h>
 #include <stddef.h>
 
-// Fixed-size thread-safe buffer data type.
+// Fixed-capacity dynamic-length thread-safe buffer data type.
 struct Buffer {
 	unsigned char *arr;
 	pthread_mutex_t mutex;
@@ -17,7 +18,7 @@ struct Buffer {
 // Initializes the buffer with capacity 'cap'. Call only once.
 void buf_init(struct Buffer *buf, size_t cap);
 
-// Frees the buffer's memory.
+// Frees the buffer's memory. Do not use after calling this.
 void buf_free(struct Buffer *buf);
 
 // Reads the byte in the buffer at index 'i'.
@@ -30,6 +31,10 @@ void buf_write(struct Buffer *buf, size_t i, unsigned char c);
 void buf_push(struct Buffer *buf, unsigned char c);
 
 // Returns true if the buffer contents are the same as the string 's'.
-int buf_equals(struct Buffer *buf, const char* s);
+bool buf_eq(struct Buffer *buf, const char* s);
+
+// Returns true if the buffer contents from index 'i' (inclusive) to index 'j'
+// (exclusive) are the same as the string 's'.
+bool buf_range_eq(struct Buffer *buf, size_t i, size_t j, const char* s);
 
 #endif

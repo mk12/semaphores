@@ -41,7 +41,14 @@ void buf_push(struct Buffer *buf, unsigned char c) {
 	pthread_mutex_unlock(&buf->mutex);
 }
 
-int buf_equals(struct Buffer *buf, const char* s) {
+bool buf_eq(struct Buffer *buf, const char* s) {
 	return strlen(s) == buf->len &&
 		strncmp((const char *)buf->arr, s, buf->len) == 0;
+}
+
+bool buf_range_eq(struct Buffer *buf, size_t i, size_t j, const char* s) {
+	assert(i <= j);
+	assert(j < buf->cap);
+	return strlen(s) == j - i &&
+		strncmp((const char *)(buf->arr + i), s, j - i) == 0;
 }

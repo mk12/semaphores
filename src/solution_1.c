@@ -42,7 +42,7 @@ bool solution_1(void) {
 	pthread_join(thread_b, NULL);
 
 	// Check for success.
-	bool success = buf_equals(&data.buf, "AB");
+	bool success = buf_eq(&data.buf, "AB");
 
 	// Clean up.
 	buf_free(&data.buf);
