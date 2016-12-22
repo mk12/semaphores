@@ -18,9 +18,9 @@ static const char *const usage_message = "usage: semaphores [TEST_NUMBER]\n";
 typedef bool (*SolutionFn)(void);
 
 // Function pointers to the solution functions.
-#define N_SOLUTIONS 1
+#define N_SOLUTIONS 2
 static const SolutionFn solution_fns[N_SOLUTIONS] = {
-	solution_1
+	solution_1, solution_2
 };
 
 // Returns true if there is a solution function numbered 'n'.

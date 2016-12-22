@@ -6,5 +6,6 @@
 #include <stdbool.h>
 
 bool solution_1(void);
+bool solution_2(void);
 
 #endif
