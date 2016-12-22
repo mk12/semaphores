@@ -19,14 +19,17 @@ static const SolutionFn solution_fns[N_SOLUTIONS] = {
 	solution_1
 };
 
+// Returns true if there is a solution function numbered 'n'.
 static bool has_solution(int n) {
 	return n >= 1 && n <= N_SOLUTIONS;
 }
 
+// Returns a status string for success (true) or failure (false).
 static const char* status_str(bool success) {
 	return success ? "ok" : "FAIL";
 }
 
+// Tests the exercise solution numbered 'n', printing the outcome.
 static bool test(int n) {
 	int index = n - 1;
 	bool success = solution_fns[index]();
@@ -35,6 +38,7 @@ static bool test(int n) {
 	return success;
 }
 
+// Tests all exercise solutions, printing the individual outcomes and a summary.
 static bool test_all(void) {
 	int passes = 0;
 	for (int i = 1; i <= N_SOLUTIONS; i++) {
