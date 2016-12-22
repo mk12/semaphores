@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Number of times to repeat tests (once is not enough, since concurrency issues
+// will usually cause intermittent failure).
+#define ITERATIONS 25
+
 // The usage message for the program.
 static const char *const usage_message = "usage: semaphores [TEST_NUMBER]\n";
 
@@ -32,7 +36,14 @@ static const char* status_str(bool success) {
 // Tests the exercise solution numbered 'n', printing the outcome.
 static bool test(int n) {
 	int index = n - 1;
-	bool success = solution_fns[index]();
+	SolutionFn function = solution_fns[index];
+	bool success = true;
+	for (int i = 0; i < ITERATIONS; i++) {
+		if (!function()) {
+			success = false;
+			break;
+		}
+	}
 	const char* msg = status_str(success);
 	printf("%02d ... %4s\n", n, msg);
 	return success;

@@ -1,13 +1,17 @@
 # Semaphores
 
-This repository contains my solutions to the exercises in [The Little Book of Semaphores][1]. I have written them in C using [POSIX semaphores][2].
+This repository contains my solutions to the exercises in [The Little Book of Semaphores][lbos], written in C.
 
-[1]: http://greenteapress.com/wp/semaphores/
-[2]: https://linux.die.net/man/7/sem_overview
+[lbos]: http://greenteapress.com/wp/semaphores/
 
 ## Build
 
 Just run `make`.
+
+It will only build properly on macOS, since I am using the semaphore implementation provided by Apple's [Dispatch framework][dispatch]. I would have used [POSIX semaphores][posix], but the POSIX unnamed semaphores are not implemented in macOS.
+
+[dispatch]: https://developer.apple.com/reference/dispatch/dispatchsemaphore
+[posix]: https://linux.die.net/man/7/sem_overview
 
 ## Usage
 
