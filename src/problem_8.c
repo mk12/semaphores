@@ -17,7 +17,9 @@ const char *const problem_8_name = "Producer-consumer";
 struct Data {
 	Semaphore mutex;
 	Semaphore items;
+	unsigned char next;
 	struct Buffer buf;
+	struct Buffer log;
 };
 
 static void *run_producer(void *ptr) {
@@ -25,7 +27,10 @@ static void *run_producer(void *ptr) {
 
 	delay();
 	sema_wait(d->mutex);
-	buf_push(&d->buf, 'P');
+	unsigned char item = d->next++;
+	buf_push(&d->buf, item);
+	buf_push(&d->log, 'P');
+	buf_push(&d->log, item);
 	sema_signal(d->mutex);
 	sema_signal(d->items);
 
@@ -37,7 +42,9 @@ static void *run_consumer(void *ptr) {
 
 	sema_wait(d->items);
 	sema_wait(d->mutex);
-	buf_push(&d->buf, 'C');
+	unsigned char item = buf_pop(&d->buf);
+	buf_push(&d->log, 'C');
+	buf_push(&d->log, item);
 	sema_signal(d->mutex);
 
 	return NULL;
@@ -48,8 +55,10 @@ bool problem_8(void) {
 	struct Data data = {
 		.mutex = sema_create(1),
 		.items = sema_create(0),
+		.next = 0
 	};
-	buf_init(&data.buf, N_THREADS);
+	buf_init(&data.buf, N_PRODUCERS);
+	buf_init(&data.log, N_THREADS * 2);
 
 	// Create and run threads.
 	pthread_t threads[N_THREADS];
@@ -65,13 +74,23 @@ bool problem_8(void) {
 
 	// Check for success.
 	bool success = true;
-	int items = 0;
-	for (size_t i = 0; i < N_THREADS; i++) {
-		unsigned char c = buf_read(&data.buf, i);
-		if (c == 'P') {
+	bool waiting[N_PRODUCERS] = { false };
+	size_t items = 0;
+	for (size_t i = 0; i < N_THREADS * 2; i += 2) {
+		unsigned char c1 = buf_read(&data.log, i);
+		unsigned char c2 = buf_read(&data.log, i + 1);
+		if (c2 >= N_PRODUCERS) {
+			success = false;
+			break;
+		}
+
+		if (c1 == 'P') {
+			success &= !waiting[c2];
+			waiting[c2] = true;
 			items++;
-		} else if (c == 'C') {
-			success &= items > 0;
+		} else if (c1 == 'C') {
+			success &= waiting[c2];
+			waiting[c2] = false;
 			items--;
 		} else {
 			success = false;
@@ -79,8 +98,10 @@ bool problem_8(void) {
 		}
 	}
 	success &= items == N_PRODUCERS - N_CONSUMERS;
+	success &= data.buf.len == items;
 
 	// Clean up.
+	buf_free(&data.log);
 	buf_free(&data.buf);
 	sema_destroy(data.mutex);
 	sema_destroy(data.items);
