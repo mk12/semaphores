@@ -18,14 +18,14 @@ struct Data {
 	Semaphore turnstile1;
 	Semaphore turnstile2;
 	int count;
-	struct Buffer buf;
+	struct Buffer log;
 };
 
 static void *run(void *ptr) {
 	struct Data *d = ptr;
 
 	for (int i = 0; i < N_ITERATIONS; i++) {
-		buf_push(&d->buf, (unsigned char)i);
+		buf_push(&d->log, (unsigned char)i);
 
 		sema_wait(d->mutex);
 		d->count++;
@@ -61,7 +61,7 @@ bool problem_6(void) {
 		.turnstile2 = sema_create(1),
 		.count = 0
 	};
-	buf_init(&data.buf, N_THREADS * N_ITERATIONS);
+	buf_init(&data.log, N_THREADS * N_ITERATIONS);
 
 	// Create and run threads.
 	pthread_t threads[N_THREADS];
@@ -77,12 +77,12 @@ bool problem_6(void) {
 	for (size_t i = 0; i < N_ITERATIONS; i++) {
 		for (size_t j = 0; j < N_THREADS; j++) {
 			size_t index = i * N_THREADS + j;
-			success &= buf_read(&data.buf, index) == i;
+			success &= buf_read(&data.log, index) == i;
 		}
 	}
 
 	// Clean up.
-	buf_free(&data.buf);
+	buf_free(&data.log);
 	sema_destroy(data.mutex);
 	sema_destroy(data.turnstile1);
 	sema_destroy(data.turnstile2);

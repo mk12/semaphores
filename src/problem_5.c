@@ -16,13 +16,13 @@ struct Data {
 	Semaphore mutex;
 	Semaphore turnstile;
 	int count;
-	struct Buffer buf;
+	struct Buffer log;
 };
 
 static void *run(void *ptr) {
 	struct Data *d = ptr;
 
-	buf_push(&d->buf, '0');
+	buf_push(&d->log, '0');
 
 	sema_wait(d->mutex);
 	d->count++;
@@ -33,7 +33,7 @@ static void *run(void *ptr) {
 	sema_wait(d->turnstile);
 	sema_signal(d->turnstile);
 
-	buf_push(&d->buf, '1');
+	buf_push(&d->log, '1');
 
 	return NULL;
 }
@@ -45,7 +45,7 @@ bool problem_5(void) {
 		.turnstile = sema_create(0),
 		.count = 0
 	};
-	buf_init(&data.buf, N_THREADS * 2);
+	buf_init(&data.log, N_THREADS * 2);
 
 	// Create and run threads.
 	pthread_t threads[N_THREADS];
@@ -59,14 +59,14 @@ bool problem_5(void) {
 	// Check for success.
 	bool success = true;
 	for (size_t i = 0; i < N_THREADS; i++) {
-		success &= buf_read(&data.buf, i) == '0';
+		success &= buf_read(&data.log, i) == '0';
 	}
 	for (size_t i = N_THREADS; i < N_THREADS * 2; i++) {
-		success &= buf_read(&data.buf, i) == '1';
+		success &= buf_read(&data.log, i) == '1';
 	}
 
 	// Clean up.
-	buf_free(&data.buf);
+	buf_free(&data.log);
 	sema_destroy(data.mutex);
 	sema_destroy(data.turnstile);
 

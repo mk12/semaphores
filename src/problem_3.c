@@ -7,6 +7,8 @@
 #include <pthread.h>
 #include <stddef.h>
 
+#define N_THREADS 10
+
 const char *const problem_3_name = "Mutex"; 
 
 struct Data {
@@ -30,14 +32,16 @@ bool problem_3(void) {
 	};
 
 	// Create and run threads.
-	pthread_t thread_a, thread_b;
-	pthread_create(&thread_a, NULL, run, &data);
-	pthread_create(&thread_b, NULL, run, &data);
-	pthread_join(thread_a, NULL);
-	pthread_join(thread_b, NULL);
+	pthread_t threads[N_THREADS];
+	for (size_t i = 0; i < N_THREADS; i++) {
+		pthread_create(&threads[i], NULL, run, &data);
+	}
+	for (size_t i = 0; i < N_THREADS; i++) {
+		pthread_join(threads[i], NULL);
+	}
 
 	// Check for success.
-	bool success = data.count == 2;
+	bool success = data.count == N_THREADS;
 
 	// Clean up.
 	sema_destroy(data.mutex);

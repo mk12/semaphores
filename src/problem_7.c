@@ -19,7 +19,7 @@ struct Data {
 	Semaphore follower_queue;
 	int leaders;
 	int followers;
-	struct Buffer buf;
+	struct Buffer log;
 };
 
 static void *run_leader(void *ptr) {
@@ -34,7 +34,7 @@ static void *run_leader(void *ptr) {
 		sema_signal(d->mutex);
 		sema_wait(d->leader_queue);
 	}
-	buf_push(&d->buf, 'L');
+	buf_push(&d->log, 'L');
 	sema_wait(d->rendezvous);
 	sema_signal(d->mutex);
 
@@ -53,7 +53,7 @@ static void *run_follower(void *ptr) {
 		sema_signal(d->mutex);
 		sema_wait(d->follower_queue);
 	}
-	buf_push(&d->buf, 'F');
+	buf_push(&d->log, 'F');
 	sema_signal(d->rendezvous);
 
 	return NULL;
@@ -69,7 +69,7 @@ bool problem_7(void) {
 		.leaders = 0,
 		.followers = 0
 	};
-	buf_init(&data.buf, N_THREADS);
+	buf_init(&data.log, N_THREADS);
 
 	// Create and run threads.
 	pthread_t threads[N_THREADS];
@@ -86,13 +86,13 @@ bool problem_7(void) {
 	// Check for success.
 	bool success = true;
 	for (size_t i = 0; i < N_THREADS; i += 2) {
-		unsigned char c1 = buf_read(&data.buf, i);
-		unsigned char c2 = buf_read(&data.buf, i + 1);
+		unsigned char c1 = buf_read(&data.log, i);
+		unsigned char c2 = buf_read(&data.log, i + 1);
 		success &= (c1 == 'L' && c2 == 'F') || (c1 == 'F' && c2 == 'L');
 	}
 
 	// Clean up.
-	buf_free(&data.buf);
+	buf_free(&data.log);
 	sema_destroy(data.mutex);
 	sema_destroy(data.rendezvous);
 	sema_destroy(data.leader_queue);

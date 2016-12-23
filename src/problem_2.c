@@ -13,25 +13,25 @@ const char *const problem_2_name = "Rendezvous";
 struct Data {
 	Semaphore a_arrived;
 	Semaphore b_arrived;
-	struct Buffer buf;
+	struct Buffer log;
 };
 
 static void *run_a(void *ptr) {
 	struct Data *d = ptr;
 	delay();
-	buf_push(&d->buf, 'a');
+	buf_push(&d->log, 'a');
 	sema_signal(d->a_arrived);
 	sema_wait(d->b_arrived);
-	buf_push(&d->buf, 'A');
+	buf_push(&d->log, 'A');
 	return NULL;
 }
 
 static void *run_b(void *ptr) {
 	struct Data *d = ptr;
-	buf_push(&d->buf, 'b');
+	buf_push(&d->log, 'b');
 	sema_signal(d->b_arrived);
 	sema_wait(d->a_arrived);
-	buf_push(&d->buf, 'B');
+	buf_push(&d->log, 'B');
 	return NULL;
 }
 
@@ -41,7 +41,7 @@ bool problem_2(void) {
 		.a_arrived = sema_create(0),
 		.b_arrived = sema_create(0)
 	};
-	buf_init(&data.buf, 4);
+	buf_init(&data.log, 4);
 
 	// Create and run threads.
 	pthread_t thread_a, thread_b;
@@ -52,13 +52,13 @@ bool problem_2(void) {
 
 	// Check for success.
 	bool success =
-		(buf_range_eq(&data.buf, 0, 2, "ab")
-			|| buf_range_eq(&data.buf, 0, 2, "ba"))
-		&& (buf_range_eq(&data.buf, 2, 4, "AB")
-			|| buf_range_eq(&data.buf, 2, 4, "BA"));
+		(buf_range_eq(&data.log, 0, 2, "ab")
+			|| buf_range_eq(&data.log, 0, 2, "ba"))
+		&& (buf_range_eq(&data.log, 2, 4, "AB")
+			|| buf_range_eq(&data.log, 2, 4, "BA"));
 
 	// Clean up.
-	buf_free(&data.buf);
+	buf_free(&data.log);
 	sema_destroy(data.a_arrived);
 	sema_destroy(data.b_arrived);
 
