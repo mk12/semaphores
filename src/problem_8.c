@@ -26,8 +26,8 @@ static void *run_producer(void *ptr) {
 	delay();
 	sema_wait(d->mutex);
 	buf_push(&d->buf, 'P');
-	sema_signal(d->items);
 	sema_signal(d->mutex);
+	sema_signal(d->items);
 
 	return NULL;
 }
