@@ -1,11 +1,13 @@
 // Copyright 2016 Mitchell Kember. Subject to the MIT License.
 
-#include "prototypes.h"
+#include "problems.h"
 #include "semaphore.h"
 #include "util.h"
 
 #include <pthread.h>
 #include <stddef.h>
+
+const char *const problem_3_name = "Mutex"; 
 
 struct Data {
 	Semaphore mutex;
@@ -20,8 +22,7 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-// 3.4: Mutex (mutual exclusion)
-bool solution_3(void) {
+bool problem_3(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.mutex = sema_create(1),

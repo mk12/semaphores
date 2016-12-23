@@ -1,6 +1,6 @@
 // Copyright 2016 Mitchell Kember. Subject to the MIT License.
 
-#include "prototypes.h"
+#include "problems.h"
 #include "semaphore.h"
 #include "util.h"
 
@@ -9,6 +9,8 @@
 
 #define N_THREADS 10
 #define MAX_IN_CRITICAL 2
+
+const char *const problem_4_name = "Multiplex"; 
 
 struct Data {
 	Semaphore multiplex;
@@ -25,8 +27,7 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-// 3.5: Multiplex
-bool solution_4(void) {
+bool problem_4(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.multiplex = sema_create(MAX_IN_CRITICAL),
@@ -35,10 +36,10 @@ bool solution_4(void) {
 
 	// Create and run threads.
 	pthread_t threads[N_THREADS];
-	for (int i = 0; i < N_THREADS; i++) {
+	for (size_t i = 0; i < N_THREADS; i++) {
 		pthread_create(&threads[i], NULL, run, &data);
 	}
-	for (int i = 0; i < N_THREADS; i++) {
+	for (size_t i = 0; i < N_THREADS; i++) {
 		pthread_join(threads[i], NULL);
 	}
 
