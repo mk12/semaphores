@@ -14,7 +14,7 @@ const char *const problem_5_name = "Barrier";
 
 struct Data {
 	Semaphore mutex;
-	Semaphore barrier;
+	Semaphore turnstile;
 	int count;
 	struct Buffer buf;
 };
@@ -22,18 +22,18 @@ struct Data {
 static void *run(void *ptr) {
 	struct Data *d = ptr;
 
-	buf_push(&d->buf, '1');
+	buf_push(&d->buf, '0');
 
 	sema_wait(d->mutex);
 	d->count++;
-	sema_signal(d->mutex);
 	if (d->count == N_THREADS) {
-		sema_signal(d->barrier);
+		sema_signal(d->turnstile);
 	}
-	sema_wait(d->barrier);
-	sema_signal(d->barrier);
+	sema_signal(d->mutex);
+	sema_wait(d->turnstile);
+	sema_signal(d->turnstile);
 
-	buf_push(&d->buf, '2');
+	buf_push(&d->buf, '1');
 
 	return NULL;
 }
@@ -42,7 +42,7 @@ bool problem_5(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.mutex = sema_create(1),
-		.barrier = sema_create(0),
+		.turnstile = sema_create(0),
 		.count = 0
 	};
 	buf_init(&data.buf, N_THREADS * 2);
@@ -59,16 +59,16 @@ bool problem_5(void) {
 	// Check for success.
 	bool success = true;
 	for (size_t i = 0; i < N_THREADS; i++) {
-		success &= buf_read(&data.buf, i) == '1';
+		success &= buf_read(&data.buf, i) == '0';
 	}
 	for (size_t i = N_THREADS; i < N_THREADS * 2; i++) {
-		success &= buf_read(&data.buf, i) == '2';
+		success &= buf_read(&data.buf, i) == '1';
 	}
 
 	// Clean up.
 	buf_free(&data.buf);
 	sema_destroy(data.mutex);
-	sema_destroy(data.barrier);
+	sema_destroy(data.turnstile);
 
 	return success;
 }
