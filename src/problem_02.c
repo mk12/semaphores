@@ -8,7 +8,7 @@
 #include <pthread.h>
 #include <stddef.h>
 
-const char *const problem_2_name = "Rendezvous";
+const char *const problem_02_name = "Rendezvous";
 
 struct Data {
 	Semaphore a_arrived;
@@ -35,7 +35,7 @@ static void *run_b(void *ptr) {
 	return NULL;
 }
 
-bool problem_2(void) {
+bool problem_02(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.a_arrived = sema_create(0),

@@ -11,7 +11,7 @@
 #define N_THREADS 10
 #define N_ITERATIONS 3
 
-const char *const problem_6_name = "Reusable barrier"; 
+const char *const problem_06_name = "Reusable barrier";
 
 struct Data {
 	Semaphore mutex;
@@ -53,7 +53,7 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-bool problem_6(void) {
+bool problem_06(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.mutex = sema_create(1),

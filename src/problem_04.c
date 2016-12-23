@@ -10,7 +10,7 @@
 #define N_THREADS 10
 #define MAX_IN_CRITICAL 2
 
-const char *const problem_4_name = "Multiplex"; 
+const char *const problem_04_name = "Multiplex";
 
 struct Data {
 	Semaphore multiplex;
@@ -27,7 +27,7 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-bool problem_4(void) {
+bool problem_04(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.multiplex = sema_create(MAX_IN_CRITICAL),

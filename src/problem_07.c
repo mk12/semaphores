@@ -10,7 +10,7 @@
 
 #define N_THREADS 10
 
-const char *const problem_7_name = "Exclusive queue";
+const char *const problem_07_name = "Exclusive queue";
 
 struct Data {
 	Semaphore mutex;
@@ -59,7 +59,7 @@ static void *run_follower(void *ptr) {
 	return NULL;
 }
 
-bool problem_7(void) {
+bool problem_07(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.mutex = sema_create(1),

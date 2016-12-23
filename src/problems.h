@@ -12,26 +12,26 @@
 typedef bool (*ProblemFn)(void);
 
 // Declarations for exercise problem names.
-extern const char *const problem_1_name;
-extern const char *const problem_2_name;
-extern const char *const problem_3_name;
-extern const char *const problem_4_name;
-extern const char *const problem_5_name;
-extern const char *const problem_6_name;
-extern const char *const problem_7_name;
-extern const char *const problem_8_name;
-extern const char *const problem_9_name;
+extern const char *const problem_01_name;
+extern const char *const problem_02_name;
+extern const char *const problem_03_name;
+extern const char *const problem_04_name;
+extern const char *const problem_05_name;
+extern const char *const problem_06_name;
+extern const char *const problem_07_name;
+extern const char *const problem_08_name;
+extern const char *const problem_09_name;
 
 // Prototypes for exercise problem functions.
-bool problem_1(void);
-bool problem_2(void);
-bool problem_3(void);
-bool problem_4(void);
-bool problem_5(void);
-bool problem_6(void);
-bool problem_7(void);
-bool problem_8(void);
-bool problem_9(void);
+bool problem_01(void);
+bool problem_02(void);
+bool problem_03(void);
+bool problem_04(void);
+bool problem_05(void);
+bool problem_06(void);
+bool problem_07(void);
+bool problem_08(void);
+bool problem_09(void);
 
 // Returns the name of the exercise problem numbered 'n'.
 const char *get_problem_name(int n);

@@ -6,30 +6,30 @@
 
 const char *get_problem_name(int n) {
 	switch (n) {
-	case 1: return problem_1_name;
-	case 2: return problem_2_name;
-	case 3: return problem_3_name;
-	case 4: return problem_4_name;
-	case 5: return problem_5_name;
-	case 6: return problem_6_name;
-	case 7: return problem_7_name;
-	case 8: return problem_8_name;
-	case 9: return problem_9_name;
+	case 1: return problem_01_name;
+	case 2: return problem_02_name;
+	case 3: return problem_03_name;
+	case 4: return problem_04_name;
+	case 5: return problem_05_name;
+	case 6: return problem_06_name;
+	case 7: return problem_07_name;
+	case 8: return problem_08_name;
+	case 9: return problem_09_name;
 	default: return NULL;
 	}
 }
 
 ProblemFn get_problem_function(int n) {
 	switch (n) {
-	case 1: return problem_1;
-	case 2: return problem_2;
-	case 3: return problem_3;
-	case 4: return problem_4;
-	case 5: return problem_5;
-	case 6: return problem_6;
-	case 7: return problem_7;
-	case 8: return problem_8;
-	case 9: return problem_9;
+	case 1: return problem_01;
+	case 2: return problem_02;
+	case 3: return problem_03;
+	case 4: return problem_04;
+	case 5: return problem_05;
+	case 6: return problem_06;
+	case 7: return problem_07;
+	case 8: return problem_08;
+	case 9: return problem_09;
 	default: return NULL;
 	}
 }

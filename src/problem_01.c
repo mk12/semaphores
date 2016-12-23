@@ -8,7 +8,7 @@
 #include <pthread.h>
 #include <stddef.h>
 
-const char *const problem_1_name = "Signaling";
+const char *const problem_01_name = "Signaling";
 
 struct Data {
 	Semaphore sem;
@@ -30,7 +30,7 @@ static void *run_b(void *ptr) {
 	return NULL;
 }
 
-bool problem_1(void) {
+bool problem_01(void) {
 	// Initialize the shared data.
 	struct Data data = { .sem = sema_create(0) };
 	buf_init(&data.log, 2);

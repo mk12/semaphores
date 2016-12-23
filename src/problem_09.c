@@ -11,12 +11,14 @@
 #define N_PRODUCERS 6
 #define N_CONSUMERS 4
 #define N_THREADS (N_PRODUCERS + N_CONSUMERS)
+#define BUFFER_SIZE 3
 
-const char *const problem_8_name = "Producer-consumer";
+const char *const problem_09_name = "Finite buffer P-C";
 
 struct Data {
 	Semaphore mutex;
 	Semaphore items;
+	Semaphore spaces;
 	unsigned char next;
 	struct Buffer buf;
 	struct Buffer log;
@@ -26,6 +28,7 @@ static void *run_producer(void *ptr) {
 	struct Data *d = ptr;
 
 	delay();
+	sema_wait(d->spaces);
 	sema_wait(d->mutex);
 	unsigned char item = d->next++;
 	buf_push(&d->buf, item);
@@ -46,18 +49,20 @@ static void *run_consumer(void *ptr) {
 	buf_push(&d->log, 'C');
 	buf_push(&d->log, item);
 	sema_signal(d->mutex);
+	sema_signal(d->spaces);
 
 	return NULL;
 }
 
-bool problem_8(void) {
+bool problem_09(void) {
 	// Initialize the shared data.
 	struct Data data = {
 		.mutex = sema_create(1),
 		.items = sema_create(0),
+		.spaces = sema_create(BUFFER_SIZE),
 		.next = 0
 	};
-	buf_init(&data.buf, N_PRODUCERS);
+	buf_init(&data.buf, BUFFER_SIZE);
 	buf_init(&data.log, N_THREADS * 2);
 
 	// Create and run threads.
@@ -103,6 +108,8 @@ bool problem_8(void) {
 	// Clean up.
 	sema_destroy(data.mutex);
 	sema_destroy(data.items);
+	// TODO: Figure out why this causes SIGILL (EXC_BAD_INSTRUCTION).
+	// sema_destroy(data.spaces);
 	buf_free(&data.log);
 	buf_free(&data.buf);
 
