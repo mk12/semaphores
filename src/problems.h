@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 // Number of exercise problems done so far.
-#define N_PROBLEMS 8
+#define N_PROBLEMS 9
 
 // A function that executes an exercise problem, returning true on success.
 typedef bool (*ProblemFn)(void);
@@ -20,6 +20,7 @@ extern const char *const problem_5_name;
 extern const char *const problem_6_name;
 extern const char *const problem_7_name;
 extern const char *const problem_8_name;
+extern const char *const problem_9_name;
 
 // Prototypes for exercise problem functions.
 bool problem_1(void);
@@ -30,6 +31,7 @@ bool problem_5(void);
 bool problem_6(void);
 bool problem_7(void);
 bool problem_8(void);
+bool problem_9(void);
 
 // Returns the name of the exercise problem numbered 'n'.
 const char *get_problem_name(int n);
