@@ -13,6 +13,13 @@ void buf_init(struct Buffer *buf, size_t cap) {
 	buf->mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
 }
 
+void buf_init_zero(struct Buffer *buf, size_t cap) {
+	buf->arr = calloc(cap, 1);
+	buf->len = cap;
+	buf->cap = cap;
+	buf->mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+}
+
 void buf_free(struct Buffer *buf) {
 	free(buf->arr);
 	buf->arr = NULL;

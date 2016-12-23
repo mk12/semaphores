@@ -3,6 +3,7 @@
 #include "buffer.h"
 #include "prototypes.h"
 #include "semaphore.h"
+#include "util.h"
 
 #include <pthread.h>
 #include <stddef.h>
@@ -15,6 +16,7 @@ struct Data {
 
 static void *run_a(void *ptr) {
 	struct Data *d = ptr;
+	delay();
 	buf_push(&d->buf, 'a');
 	sema_signal(d->a_arrived);
 	sema_wait(d->b_arrived);

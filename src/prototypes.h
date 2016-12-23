@@ -7,5 +7,7 @@
 
 bool solution_1(void);
 bool solution_2(void);
+bool solution_3(void);
+bool solution_4(void);
 
 #endif

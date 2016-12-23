@@ -1,7 +1,7 @@
 # Compiler
 CC := clang
 OFLAGS := -O3
-CFLAGS := -std=c11 -Weverything -pedantic
+CFLAGS := -std=c11 -Weverything -pedantic -Wno-padded
 LDFLAGS := -lpthread
 
 # Project
@@ -24,7 +24,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(OBJ_DIR)/$*.d
 
 all: release
 
-release: CFLAGS += $(OFLAGS) -DNDEBUG
+release: CFLAGS += $(OFLAGS)
 release: LDFLAGS += $(OFLAGS)
 release: prep $(EXEC)
 release:

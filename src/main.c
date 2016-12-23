@@ -7,9 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Number of times to repeat tests (once is not enough, since concurrency issues
-// will usually cause intermittent failure).
-#define ITERATIONS 25
+// Number of times to repeat tests, to be extra sure.
+#define ITERATIONS 5
 
 // The usage message for the program.
 static const char *const usage_message = "usage: semaphores [TEST_NUMBER]\n";
@@ -18,9 +17,9 @@ static const char *const usage_message = "usage: semaphores [TEST_NUMBER]\n";
 typedef bool (*SolutionFn)(void);
 
 // Function pointers to the solution functions.
-#define N_SOLUTIONS 2
+#define N_SOLUTIONS 4
 static const SolutionFn solution_fns[N_SOLUTIONS] = {
-	solution_1, solution_2
+	solution_1, solution_2, solution_3, solution_4
 };
 
 // Returns true if there is a solution function numbered 'n'.
