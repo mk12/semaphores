@@ -66,9 +66,9 @@ bool problem_5(void) {
 	}
 
 	// Clean up.
-	buf_free(&data.log);
 	sema_destroy(data.mutex);
 	sema_destroy(data.turnstile);
+	buf_free(&data.log);
 
 	return success;
 }

@@ -15,6 +15,9 @@ typedef dispatch_semaphore_t Semaphore;
 // 'sema_wait' will behave normally. If it is false, then they will be no-ops.
 void set_semaphores_enabled(bool enabled);
 
+// Returns true if semaphores are enabled.
+bool are_sempahores_enabled(void);
+
 // Creates a semaphore with an initial value.
 Semaphore sema_create(long value);
 

@@ -101,10 +101,10 @@ bool problem_8(void) {
 	success &= data.buf.len == items;
 
 	// Clean up.
-	buf_free(&data.log);
-	buf_free(&data.buf);
 	sema_destroy(data.mutex);
 	sema_destroy(data.items);
+	buf_free(&data.log);
+	buf_free(&data.buf);
 
 	return success;
 }

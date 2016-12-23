@@ -8,6 +8,10 @@ void set_semaphores_enabled(bool enabled) {
 	semaphores_enabled = enabled;
 }
 
+bool are_sempahores_enabled(void) {
+	return semaphores_enabled;
+}
+
 Semaphore sema_create(long value) {
 	return dispatch_semaphore_create(value);
 }

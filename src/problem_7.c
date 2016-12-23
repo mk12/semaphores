@@ -92,11 +92,11 @@ bool problem_7(void) {
 	}
 
 	// Clean up.
-	buf_free(&data.log);
 	sema_destroy(data.mutex);
 	sema_destroy(data.rendezvous);
 	sema_destroy(data.leader_queue);
 	sema_destroy(data.follower_queue);
+	buf_free(&data.log);
 
 	return success;
 }

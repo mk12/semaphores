@@ -46,8 +46,8 @@ bool problem_1(void) {
 	bool success = buf_eq(&data.log, "AB");
 
 	// Clean up.
-	buf_free(&data.log);
 	sema_destroy(data.sem);
+	buf_free(&data.log);
 
 	return success;
 }

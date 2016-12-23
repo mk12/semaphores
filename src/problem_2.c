@@ -58,9 +58,9 @@ bool problem_2(void) {
 			|| buf_range_eq(&data.log, 2, 4, "BA"));
 
 	// Clean up.
-	buf_free(&data.log);
 	sema_destroy(data.a_arrived);
 	sema_destroy(data.b_arrived);
+	buf_free(&data.log);
 
 	return success;
 }
