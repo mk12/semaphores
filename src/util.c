@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 void delay(void) {
-	usleep(100);
+	usleep(200);
 }
 
 void increment(int *ptr) {
