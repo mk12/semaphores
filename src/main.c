@@ -11,14 +11,8 @@
 // The usage message for the program.
 static const char *const usage_message = "usage: semaphores [PROBLEM_NUMBER]\n";
 
-// A function that executes an exercise problem, returning true on success.
-typedef bool (*ProblemFn)(void);
-
-// Function pointers for all the exercise problems.
-#define N_PROBLEMS 5
-static const ProblemFn problem_fns[N_PROBLEMS] = {
-	problem_1, problem_2, problem_3, problem_4, problem_5
-};
+// A string of dots used for padding.
+static const char *const padding_dots = "....................";
 
 // Returns true if there is an exercise problem numbered 'n'.
 static bool in_range(int n) {
@@ -32,19 +26,20 @@ static const char* status_str(bool success) {
 
 // Tests the exercise problem numbered 'n', printing the outcome.
 static bool test(int n) {
-	int index = n - 1;
-	ProblemFn function = problem_fns[index];
+	ProblemFn function = get_problem_function(n);
 	set_semaphores_enabled(false);
 	bool success_off = function();
 	set_semaphores_enabled(true);
 	bool success_on = function();
 
+	const char *name = get_problem_name(n);
+	const char *pad = padding_dots + strlen(name);
 	const char *msg = status_str(success_on);
+	printf("%02d. %s %s %s", n, name, pad, msg);
 	if (success_off) {
-		printf("%02d ... %4s [WARNING: ok without semaphores]\n", n, msg);
-	} else {
-		printf("%02d ... %4s\n", n, msg);
+		printf(" [WARNING: ok without]");
 	}
+	putchar('\n');
 	return success_on;
 }
 
