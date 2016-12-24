@@ -19,6 +19,7 @@ const char *get_problem_name(int n) {
 	case 11: return problem_11_name;
 	case 12: return problem_12_name;
 	case 13: return problem_13_name;
+	case 14: return problem_14_name;
 	default: return NULL;
 	}
 }
@@ -38,6 +39,7 @@ ProblemFn get_problem_function(int n) {
 	case 11: return problem_11;
 	case 12: return problem_12;
 	case 13: return problem_13;
+	case 14: return problem_14;
 	default: return NULL;
 	}
 }
