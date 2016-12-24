@@ -12,7 +12,7 @@
 static const char *const usage_message = "usage: semaphores [PROBLEM_NUMBER]\n";
 
 // A string of dots used for padding.
-static const char *const padding_dots = "....................";
+static const char *const padding_dots = "......................";
 
 // Returns true if there is an exercise problem numbered 'n'.
 static bool in_range(int n) {

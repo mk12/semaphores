@@ -10,4 +10,7 @@ void delay(void);
 // Increments the given integer, with a delay between reading and writing.
 void increment(int *ptr);
 
+// Decrements the given integer, with a delay between reading and writing.
+void decrement(int *ptr);
+
 #endif

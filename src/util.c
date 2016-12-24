@@ -13,3 +13,9 @@ void increment(int *ptr) {
 	delay();
 	*ptr = val + 1;
 }
+
+void decrement(int *ptr) {
+	int val = *ptr;
+	delay();
+	*ptr = val - 1;
+}
