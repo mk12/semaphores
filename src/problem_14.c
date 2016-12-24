@@ -74,7 +74,7 @@ bool problem_14(void) {
 		.multiplex = sema_create(N_FORKS - 1),
 		.seats = { 0 }
 	};
-	for (int i = 0; i < N_FORKS; i++) {
+	for (size_t i = 0; i < N_FORKS; i++) {
 		data.forks[i] = sema_create(1);
 	}
 	buf_init(&data.log, N_THREADS * N_FORKS);
