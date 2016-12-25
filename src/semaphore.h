@@ -6,20 +6,15 @@
 #include <dispatch/dispatch.h>
 
 #include <pthread.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 // Use Apple's Grand Central Dispatch semaphore type.
 typedef dispatch_semaphore_t Semaphore;
 
-// Enables or disables semaphores. If 'enabled' is true, then 'sema_signal' and
-// 'sema_wait' will behave normally. If it is false, then they will be no-ops.
-void set_semaphores_enabled(bool enabled);
-
-// Returns true if semaphores are enabled.
-bool are_sempahores_enabled(void);
-
-// Creates a semaphore with an initial value.
-Semaphore sema_create(long value);
+// Creates a semaphore with an initial value. If 'real_semaphore' is false, then
+// it just returns a dummy semaphore, and 'signal' and 'wait' will do nothing.
+Semaphore sema_create(long value, bool real_semaphore);
 
 // Destroys the semaphore.
 void sema_destroy(Semaphore s);

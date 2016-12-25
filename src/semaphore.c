@@ -6,30 +6,27 @@
 
 static bool semaphores_enabled = true;
 
-void set_semaphores_enabled(bool enabled) {
-	semaphores_enabled = enabled;
-}
-
-bool are_sempahores_enabled(void) {
-	return semaphores_enabled;
-}
-
-Semaphore sema_create(long value) {
-	return dispatch_semaphore_create(value);
+Semaphore sema_create(long value, bool real_semaphore) {
+	if (real_semaphore) {
+		return dispatch_semaphore_create(value);
+	}
+	return 0;
 }
 
 void sema_destroy(Semaphore s) {
-	dispatch_release(s);
+	if (s != 0) {
+		dispatch_release(s);
+	}
 }
 
 void sema_signal(Semaphore s) {
-	if (semaphores_enabled) {
+	if (s != 0) {
 		dispatch_semaphore_signal(s);
 	}
 }
 
 void sema_wait(Semaphore s) {
-	if (semaphores_enabled) {
+	if (s != 0) {
 		dispatch_semaphore_wait(s, DISPATCH_TIME_FOREVER);
 	}
 }
