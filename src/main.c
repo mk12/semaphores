@@ -29,17 +29,14 @@ static const char *const usage_message =
 	"    semaphores -t all -p " S(DEFAULT_POS_ITERS) " -n " S(DEFAULT_NEG_ITERS)
 		" -j " S(DEFAULT_JOBS) "\n"
 	"\n"
-	"  Problem number\n"
+	"  Options\n"
 	"    -t all  Test solutions to all problems\n"
 	"    -t N    Test solution to problem N (between 1 and " S(N_PROBLEMS) ")\n"
+	"    -p N    Test success with semaphores (positive case), N iterations\n"
+	"    -n N    Test failure without semaphores (negative case), N iterations\n"
+	"    -j N    Run N jobs in parallel\n"
 	"\n"
-	"  Test iterations\n"
-	"    -p N  Test success with semaphores (positive case), N iterations\n"
-	"    -n N  Test failure without semaphores (negative case), N iterations\n"
 	"    Use -p0 to disable positive tests and -n0 to disable negative tests\n"
-	"\n"
-	"  Other settings\n"
-	"    -j N  Run N jobs in parallel\n"
 	"\n";
 
 #undef S
