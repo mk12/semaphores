@@ -2,6 +2,8 @@
 
 #include "semaphore.h"
 
+#include <unistd.h>
+
 static bool semaphores_enabled = true;
 
 void set_semaphores_enabled(bool enabled) {
@@ -30,4 +32,20 @@ void sema_wait(Semaphore s) {
 	if (semaphores_enabled) {
 		dispatch_semaphore_wait(s, DISPATCH_TIME_FOREVER);
 	}
+}
+
+void delay(void) {
+	usleep(200);
+}
+
+void increment(int *ptr) {
+	int val = *ptr;
+	delay();
+	*ptr = val + 1;
+}
+
+void decrement(int *ptr) {
+	int val = *ptr;
+	delay();
+	*ptr = val - 1;
 }

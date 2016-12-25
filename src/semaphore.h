@@ -30,4 +30,14 @@ void sema_signal(Semaphore s);
 // Decrements the semaphore, and blocks if it becomes negative.
 void sema_wait(Semaphore s);
 
+// Sleeps for a short time. Used to expose concurrency issues and cause
+// failures when semaphores are disabled.
+void delay(void);
+
+// Increments the given integer, with a delay between reading and writing.
+void increment(int *ptr);
+
+// Decrements the given integer, with a delay between reading and writing.
+void decrement(int *ptr);
+
 #endif
