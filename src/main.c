@@ -14,7 +14,7 @@
 #define DEFAULT_JOBS 1
 
 // Maximum values for some parameters.
-#define MAX_ITERATIONS 10000
+#define MAX_ITERS 10000
 #define MAX_JOBS 64
 
 // Helper macros for stringification.
@@ -36,7 +36,7 @@ static const char *const usage_message =
 	"  Test iterations\n"
 	"    -p N  Test success with semaphores (positive case), N iterations\n"
 	"    -n N  Test failure without semaphores (negative case), N iterations\n"
-	"    Use -p0 or -n0 to disable positive/negative tests\n"
+	"    Use -p0 to disable positive tests and -n0 to disable negative tests\n"
 	"\n"
 	"  Other settings\n"
 	"    -j N  Run N jobs in parallel\n"
@@ -55,8 +55,8 @@ int main(int argc, char **argv) {
 	// Initialize the default parameters.
 	struct Parameters params = {
 		.problem = 0,
-		.pos_iterations = DEFAULT_POS_ITERS,
-		.neg_iterations = DEFAULT_NEG_ITERS,
+		.pos_iters = DEFAULT_POS_ITERS,
+		.neg_iters = DEFAULT_NEG_ITERS,
 		.jobs = DEFAULT_JOBS
 	};
 
@@ -80,33 +80,34 @@ int main(int argc, char **argv) {
 			if (!problem_in_range(params.problem)) {
 				printf_error("%s: out of range (should be between %d and %d)",
 						optarg, 1, N_PROBLEMS);
+				return 1;
 			}
 			break;
 		case 'p':
-			if (!parse_int(&params.pos_iterations, optarg)) {
+			if (!parse_int(&params.pos_iters, optarg)) {
 				return 1;
 			}
-			if (params.pos_iterations < 0) {
+			if (params.pos_iters < 0) {
 				printf_error("%s: iterations must be nonnegative", optarg);
 				return 1;
 			}
-			if (params.pos_iterations > MAX_ITERATIONS) {
+			if (params.pos_iters > MAX_ITERS) {
 				printf_error("%s: iterations too large (maximum %d)",
-						optarg, MAX_ITERATIONS);
+						optarg, MAX_ITERS);
 				return 1;
 			}
 			break;
 		case 'n':
-			if (!parse_int(&params.neg_iterations, optarg)) {
+			if (!parse_int(&params.neg_iters, optarg)) {
 				return 1;
 			}
-			if (params.neg_iterations < 0) {
+			if (params.neg_iters < 0) {
 				printf_error("%s: iterations must be nonnegative", optarg);
 				return 1;
 			}
-			if (params.neg_iterations > MAX_ITERATIONS) {
+			if (params.neg_iters > MAX_ITERS) {
 				printf_error("%s: iterations too large (maximum %d)",
-						optarg, MAX_ITERATIONS);
+						optarg, MAX_ITERS);
 				return 1;
 			}
 			break;
