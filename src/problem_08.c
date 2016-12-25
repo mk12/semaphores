@@ -49,11 +49,11 @@ static void *run_consumer(void *ptr) {
 	return NULL;
 }
 
-bool problem_08(void) {
+bool problem_08(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.mutex = sema_create(1),
-		.items = sema_create(0),
+		.mutex = sema_create(1, positive),
+		.items = sema_create(0, positive),
 		.next = 0
 	};
 	buf_init(&data.buf, N_PRODUCERS);

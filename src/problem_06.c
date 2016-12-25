@@ -52,12 +52,12 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-bool problem_06(void) {
+bool problem_06(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.mutex = sema_create(1),
-		.turnstile1 = sema_create(0),
-		.turnstile2 = sema_create(1),
+		.mutex = sema_create(1, positive),
+		.turnstile1 = sema_create(0, positive),
+		.turnstile2 = sema_create(1, positive),
 		.count = 0
 	};
 	buf_init(&data.log, N_THREADS * N_ITERATIONS);

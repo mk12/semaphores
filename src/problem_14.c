@@ -66,15 +66,15 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-bool problem_14(void) {
+bool problem_14(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.mutex = sema_create(1),
-		.multiplex = sema_create(N_FORKS - 1),
+		.mutex = sema_create(1, positive),
+		.multiplex = sema_create(N_FORKS - 1, positive),
 		.seats = { 0 }
 	};
 	for (size_t i = 0; i < N_FORKS; i++) {
-		data.forks[i] = sema_create(1);
+		data.forks[i] = sema_create(1, positive);
 	}
 	buf_init(&data.log, N_THREADS * N_FORKS);
 

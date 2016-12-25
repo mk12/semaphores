@@ -29,9 +29,9 @@ static void *run_b(void *ptr) {
 	return NULL;
 }
 
-bool problem_01(void) {
+bool problem_01(bool positive) {
 	// Initialize the shared data.
-	struct Data data = { .sem = sema_create(0) };
+	struct Data data = { .sem = sema_create(0, positive) };
 	buf_init(&data.log, 2);
 
 	// Create and run threads.

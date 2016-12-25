@@ -56,12 +56,12 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-bool problem_13(void) {
+bool problem_13(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.mutex = sema_create(1),
-		.turnstile1 = sema_create(1),
-		.turnstile2 = sema_create(0),
+		.mutex = sema_create(1, positive),
+		.turnstile1 = sema_create(1, positive),
+		.turnstile2 = sema_create(0, positive),
 		.room1 = 0,
 		.room2 = 0,
 		.count = 0

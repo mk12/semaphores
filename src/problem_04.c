@@ -26,10 +26,10 @@ static void *run(void *ptr) {
 	return NULL;
 }
 
-bool problem_04(void) {
+bool problem_04(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.multiplex = sema_create(MAX_IN_CRITICAL),
+		.multiplex = sema_create(MAX_IN_CRITICAL, positive),
 		.count = 0
 	};
 

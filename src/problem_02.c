@@ -34,11 +34,11 @@ static void *run_b(void *ptr) {
 	return NULL;
 }
 
-bool problem_02(void) {
+bool problem_02(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.a_arrived = sema_create(0),
-		.b_arrived = sema_create(0)
+		.a_arrived = sema_create(0, positive),
+		.b_arrived = sema_create(0, positive)
 	};
 	buf_init(&data.log, 4);
 

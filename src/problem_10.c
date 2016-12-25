@@ -56,11 +56,11 @@ static void *run_writer(void *ptr) {
 	return NULL;
 }
 
-bool problem_10(void) {
+bool problem_10(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.mutex = sema_create(1),
-		.room_empty = sema_create(1),
+		.mutex = sema_create(1, positive),
+		.room_empty = sema_create(1, positive),
 		.readers = 0,
 		.value = 0
 	};

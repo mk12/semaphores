@@ -100,20 +100,20 @@ static void *run_smoker(void *ptr) {
 	return NULL;
 }
 
-bool problem_15(void) {
+bool problem_15(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.agent = sema_create(1),
-		.pusher_mutex = sema_create(1),
+		.agent = sema_create(1, positive),
+		.pusher_mutex = sema_create(1, positive),
 		.ingredient_ready = { false },
 		.next = { 0 }
 	};
 	for (size_t i = 0; i < N_INGREDIENTS; i++) {
-		data.ingredients[i] = sema_create(0);
-		data.push_ingredients[i] = sema_create(0);
+		data.ingredients[i] = sema_create(0, positive);
+		data.push_ingredients[i] = sema_create(0, positive);
 	}
 	for (size_t i = 0; i < N_ROLES; i++) {
-		data.next_mutex[i] = sema_create(1);
+		data.next_mutex[i] = sema_create(1, positive);
 	}
 	buf_init(&data.log, N_INGREDIENTS * 4);
 

@@ -58,13 +58,13 @@ static void *run_follower(void *ptr) {
 	return NULL;
 }
 
-bool problem_07(void) {
+bool problem_07(bool positive) {
 	// Initialize the shared data.
 	struct Data data = {
-		.mutex = sema_create(1),
-		.rendezvous = sema_create(0),
-		.leader_queue = sema_create(0),
-		.follower_queue = sema_create(0),
+		.mutex = sema_create(1, positive),
+		.rendezvous = sema_create(0, positive),
+		.leader_queue = sema_create(0, positive),
+		.follower_queue = sema_create(0, positive),
 		.leaders = 0,
 		.followers = 0
 	};

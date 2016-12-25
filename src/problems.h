@@ -6,10 +6,12 @@
 #include <stdbool.h>
 
 // Number of exercise problems done so far.
-#define N_PROBLEMS 15
+#define N_PROBLEMS 16
 
-// A function that executes an exercise problem, returning true on success.
-typedef bool (*ProblemFn)(void);
+// A function that executes an exercise problem, returning true on success. If
+// the boolean argument is true, then it uses real semaphores. Otherwise, it
+// uses dummy semaphores.
+typedef bool (*ProblemFn)(bool);
 
 // Declarations for exercise problem names.
 extern const char *const problem_01_name;
@@ -27,23 +29,25 @@ extern const char *const problem_12_name;
 extern const char *const problem_13_name;
 extern const char *const problem_14_name;
 extern const char *const problem_15_name;
+extern const char *const problem_16_name;
 
 // Prototypes for exercise problem functions.
-bool problem_01(void);
-bool problem_02(void);
-bool problem_03(void);
-bool problem_04(void);
-bool problem_05(void);
-bool problem_06(void);
-bool problem_07(void);
-bool problem_08(void);
-bool problem_09(void);
-bool problem_10(void);
-bool problem_11(void);
-bool problem_12(void);
-bool problem_13(void);
-bool problem_14(void);
-bool problem_15(void);
+bool problem_01(bool);
+bool problem_02(bool);
+bool problem_03(bool);
+bool problem_04(bool);
+bool problem_05(bool);
+bool problem_06(bool);
+bool problem_07(bool);
+bool problem_08(bool);
+bool problem_09(bool);
+bool problem_10(bool);
+bool problem_11(bool);
+bool problem_12(bool);
+bool problem_13(bool);
+bool problem_14(bool);
+bool problem_15(bool);
+bool problem_16(bool);
 
 // Returns true if there is an exercise problem numbered 'n'.
 bool problem_in_range(int n);

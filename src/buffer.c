@@ -33,8 +33,7 @@ unsigned char buf_read(struct Buffer *buf, size_t i) {
 
 void buf_push(struct Buffer *buf, unsigned char c) {
 	pthread_mutex_lock(&buf->mutex);
-	if (buf->len < buf->cap || are_sempahores_enabled()) {
-		assert(buf->len < buf->cap);
+	if (buf->len < buf->cap) {
 		buf->arr[buf->len++] = c;
 	}
 	pthread_mutex_unlock(&buf->mutex);
@@ -43,8 +42,7 @@ void buf_push(struct Buffer *buf, unsigned char c) {
 unsigned char buf_pop(struct Buffer *buf) {
 	pthread_mutex_lock(&buf->mutex);
 	unsigned char c;
-	if (buf->len > 0 || are_sempahores_enabled()) {
-		assert(buf->len > 0);
+	if (buf->len > 0) {
 		c = buf->arr[--buf->len];
 	} else {
 		c = ERROR_BYTE;
