@@ -3,7 +3,6 @@
 #include "buffer.h"
 #include "problems.h"
 #include "semaphore.h"
-#include "util.h"
 
 #include <pthread.h>
 #include <stddef.h>
@@ -33,7 +32,7 @@ struct Data {
 	Semaphore ingredients[N_INGREDIENTS];
 	Semaphore push_ingredients[N_INGREDIENTS];
 	Semaphore next_mutex[N_ROLES];
-	bool is_ingredient[N_INGREDIENTS];
+	bool ingredient_ready[N_INGREDIENTS];
 	size_t next[N_ROLES];
 	struct Buffer log;
 };
@@ -70,14 +69,15 @@ static void *run_pusher(void *ptr) {
 		sema_wait(d->pusher_mutex);
 		bool pushed = false;
 		for (size_t i = 0; i < N_INGREDIENTS; i++) {
-			if (i != n && d->is_ingredient[i]) {
-				pushed = true;
-				d->is_ingredient[i] = false;
+			if (i != n && d->ingredient_ready[i]) {
+				d->ingredient_ready[i] = false;
 				sema_signal(d->push_ingredients[N_INGREDIENTS-n-i]);
+				pushed = true;
+				break;
 			}
 		}
 		if (!pushed) {
-			d->is_ingredient[n] = true;
+			d->ingredient_ready[n] = true;
 		}
 		sema_signal(d->pusher_mutex);
 	}
@@ -105,7 +105,7 @@ bool problem_15(void) {
 	struct Data data = {
 		.agent = sema_create(1),
 		.pusher_mutex = sema_create(1),
-		.is_ingredient = { false },
+		.ingredient_ready = { false },
 		.next = { 0 }
 	};
 	for (size_t i = 0; i < N_INGREDIENTS; i++) {
@@ -156,6 +156,7 @@ bool problem_15(void) {
 
 	// Clean up.
 	sema_destroy(data.agent);
+	sema_destroy(data.pusher_mutex);
 	for (size_t i = 0; i < N_INGREDIENTS; i++) {
 		sema_destroy(data.ingredients[i]);
 		sema_destroy(data.push_ingredients[i]);
