@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+bool problem_in_range(int n) {
+	return n >= 1 && n <= N_PROBLEMS;
+}
+
 const char *get_problem_name(int n) {
 	switch (n) {
 	case  1: return problem_01_name;

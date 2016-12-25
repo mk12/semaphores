@@ -45,6 +45,9 @@ bool problem_13(void);
 bool problem_14(void);
 bool problem_15(void);
 
+// Returns true if there is an exercise problem numbered 'n'.
+bool problem_in_range(int n);
+
 // Returns the name of the exercise problem numbered 'n'.
 const char *get_problem_name(int n);
 
