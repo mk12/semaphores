@@ -3,7 +3,6 @@
 #include "buffer.h"
 #include "problems.h"
 #include "semaphore.h"
-#include "util.h"
 
 #include <pthread.h>
 #include <stddef.h>
