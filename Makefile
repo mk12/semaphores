@@ -1,7 +1,7 @@
 # Compiler
 CC := clang
 OFLAGS := -O3
-CFLAGS := -std=c11 -Weverything -pedantic -Wno-padded
+CFLAGS := -std=c11 -Weverything -pedantic -Wno-padded -Wno-vla
 LDFLAGS := -lpthread
 
 # Project
