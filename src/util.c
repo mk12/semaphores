@@ -52,12 +52,12 @@ static void sigint_handler(int sig) {
 
 void open_alt_screen(void) {
 	default_sigint_handler = signal(SIGINT, sigint_handler);
-	fputs("\x1B[?1049h");
+	fputs("\x1B[?1049h", stdout);
 	fflush(stdout);
 }
 
 void close_alt_screen(void) {
-	fputs("\x1B[?1049l");
+	fputs("\x1B[?1049l", stdout);
 	fflush(stdout);
 }
 
