@@ -164,17 +164,6 @@ static void test_problem(
 	out->neg_state = test_negative(function, neg_iters);
 }
 
-// Performs the Task 'arg'. Always returns NULL.
-static void *perform_task(void *arg) {
-	struct Task *task = (struct Task *)arg;
-	for (unsigned short i = task->start; i < task->end; i++) {
-		test_problem(task->results + i,
-				INDEX_TO_PROBLEM(i), task->pos_iters, task->neg_iters);
-	}
-	(void)*task->tasks_left--;
-	return NULL;
-}
-
 // Runs the tests specified by 'params' sequentially, storing results in the
 // 'results' array and printing them as tests complete.
 static void run_sequential(
@@ -201,6 +190,17 @@ static void run_sequential(
 	}
 }
 
+// Performs the Task 'arg'. Always returns NULL.
+static void *perform_task(void *arg) {
+	struct Task *task = (struct Task *)arg;
+	for (unsigned short i = task->start; i < task->end; i++) {
+		test_problem(task->results + i,
+				INDEX_TO_PROBLEM(i), task->pos_iters, task->neg_iters);
+	}
+	--*task->tasks_left;
+	return NULL;
+}
+
 // Runs the tests specified by 'params' in parallel, storing results in the
 // 'results' array. Clears the screen and prints results periodically while jobs
 // are progressing if 'params->interactive' is true. If there was an pthread
@@ -216,10 +216,18 @@ static bool run_parallel(
 	struct Task tasks[jobs];
 	atomic_ushort tasks_left = jobs;
 
+	struct Task base_task = {
+		.start = 0,
+		.end = 0,
+		.pos_iters = (unsigned short)params->pos_iters,
+		.neg_iters = (unsigned short)params->neg_iters,
+		.results = results,
+		.tasks_left = &tasks_left
+	};
+
 	// Create threads for the tasks.
 	for (size_t i = 0; i < jobs; i++) {
-		tasks[i].tasks_left = &tasks_left;
-		tasks[i].results = results;
+		tasks[i] = base_task;
 		tasks[i].start = length * (unsigned short)i;
 		tasks[i].end = i == jobs - 1 ? N_PROBLEMS : tasks[i].start + length;
 		int err = pthread_create(&threads[i], NULL, perform_task, &tasks[i]);
