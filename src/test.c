@@ -24,7 +24,7 @@
 #define QUIT_CHARACTER 'q'
 
 // Width of the ASCII progress bar, in characters.
-#define PROGRESS_BAR_WIDTH 33
+#define PROGRESS_BAR_WIDTH 32
 
 // Converts a zero-based index to a one-based problem number.
 #define INDEX_TO_PROBLEM(i) ((int)((i) + 1))
@@ -62,8 +62,8 @@ struct Task {
 static const char *const padding_dots = "......................";
 
 // Strings used to print the progress bar.
-static const char *const progress_equal = "=================================";
-static const char *const progress_space = "                                 ";
+static const char *const progress_equal = "================================";
+static const char *const progress_space = "                                ";
 
 // Returns a 4-character status string for the given state.
 static const char* state_str(enum State state) {
