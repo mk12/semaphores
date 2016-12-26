@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 // Delay between result updates for interactive mode, in milliseconds.
-#define UPDATE_DELAY_MS 60
+#define UPDATE_DELAY_MS 100
 
 // Character to press to quit interactive mode.
 #define QUIT_CHARACTER 'q'
