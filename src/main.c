@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "t:p:n:fih")) != -1) {
+	while ((c = getopt(argc, argv, "t:p:n:j:ih")) != -1) {
 		switch (c) {
 		case 't':
 			if (!parse_int(&params.problem, optarg)) {
