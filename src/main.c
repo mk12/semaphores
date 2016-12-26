@@ -10,7 +10,7 @@
 
 // Default values for some parameters.
 #define DEFAULT_POS_ITERS 5
-#define DEFAULT_NEG_ITERS 1
+#define DEFAULT_NEG_ITERS 5
 #define DEFAULT_JOBS 1
 
 // Maximum values for some parameters.
