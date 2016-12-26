@@ -55,7 +55,7 @@ struct Task {
 // A string of dots used for padding.
 static const char *const padding_dots = "......................";
 
-// Returns a status string for the given state.
+// Returns a 4-character status string for the given state.
 static const char* state_str(enum State state) {
 	switch (state) {
 	case PENDING:
@@ -132,6 +132,7 @@ static enum State test_positive(ProblemFn function, int iters) {
 	if (iters == 0) {
 		return SKIP;
 	}
+	// In order to pass, every iteration must succeed.
 	for (int i = 0; i < iters; i++) {
 		if (!function(true)) {
 			return FAIL;
@@ -146,12 +147,13 @@ static enum State test_negative(ProblemFn function, int iters) {
 	if (iters == 0) {
 		return SKIP;
 	}
+	// In order to pass, at least one iteration must not succeed.
 	for (int i = 0; i < iters; i++) {
-		if (function(false)) {
-			return FAIL;
+		if (!function(false)) {
+			return PASS;
 		}
 	}
-	return PASS;
+	return FAIL;
 }
 
 // Tests the given exercise problem, with 'pos_iters' iterations for the
@@ -268,6 +270,7 @@ bool run_tests(const struct Parameters *params) {
 		struct Result result;
 		test_problem(&result,
 				params->problem, params->pos_iters, params->neg_iters);
+		print_header();
 		print_result(params->problem, result);
 		return result_good(result);
 	}
