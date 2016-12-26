@@ -15,7 +15,26 @@ It only builds on macOS, since I am using Apple's [Dispatch framework][dispatch]
 
 ## Usage
 
-Run `semaphores N` to test the *n*th solution, or run `semaphores` with no arguments to test all solutions.
+Run `bin/semaphores --help` to see the instructions:
+
+```
+usage: semaphores [options]
+
+  Default
+    semaphores -p 5 -n 5 -j 1
+
+  Test options
+    -t N  Test only problem N (1 to 15), not all problems
+    -p N  Test success with semaphores (positive case), N iterations
+    -n N  Test failure without semaphores (negative case), N iterations
+    Use -p0 to disable positive tests and -n0 to disable negative tests
+
+  Other options
+    -j N  Run N jobs in parallel
+    -i    Use interactive mode (display updates in alternate screen)
+```
+
+Try running `bin/semaphores -p 100 -n 100 -j 16 -i` :)
 
 ## License
 
