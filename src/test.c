@@ -14,11 +14,17 @@
 #include <string.h>
 #include <unistd.h>
 
+// There is a postive test and negative test for each problem.
+#define N_TOTAL_TESTS (N_PROBLEMS * 2)
+
 // Delay between result updates for interactive mode, in milliseconds.
 #define UPDATE_DELAY_MS 100
 
 // Character to press to quit interactive mode.
 #define QUIT_CHARACTER 'q'
+
+// Width of the ASCII progress bar, in characters.
+#define PROGRESS_BAR_WIDTH 33
 
 // Converts a zero-based index to a one-based problem number.
 #define INDEX_TO_PROBLEM(i) ((int)((i) + 1))
@@ -41,19 +47,23 @@ struct Result {
 // A Task specifies a range of exercise problems to test. Performing a Task
 // consists of executing the solution programs for the problems beginning at
 // 'start' (zero-based, not one-based), and storing the results in 'results',
-// filling from 'results[start]' to 'results[end-1]'. Finally, the 'tasks_left'
-// counter should be decremented.
+// filling from 'results[start]' to 'results[end-1]'. The 'test_count' variable
+// should be incremented after every positive test and every negative test.
 struct Task {
 	unsigned short start;       // start index in 'result' (zero-based)
 	unsigned short end;         // end index in 'result' (exclusive)
 	unsigned short pos_iters;   // iterations for the positive case
 	unsigned short neg_iters;   // iterations for the negative case
 	struct Result *results;     // array of all results
-	atomic_ushort *tasks_left;  // pointer to task countdown
+	atomic_ushort *test_count;  // pointer to test counter
 };
 
 // A string of dots used for padding.
 static const char *const padding_dots = "......................";
+
+// Strings used to print the progress bar.
+static const char *const progress_equal = "=================================";
+static const char *const progress_space = "                                 ";
 
 // Returns a 4-character status string for the given state.
 static const char* state_str(enum State state) {
@@ -120,10 +130,23 @@ static void print_all_results(struct Result *results) {
 	print_summary(results);
 }
 
-// Clears the screen and then calls 'print_all_results'.
-static void update_all_results(struct Result *results) {
+// Prints an ASCII progress bar given the number of completed tests. This number
+// should be between 0 and 2 * N_PROBLEMS, since there is a positive test and
+// negative test for each problem.
+static void print_progress_bar(size_t completed) {
+	double progress = (double)completed / N_TOTAL_TESTS;
+	int n = (int)(progress * PROGRESS_BAR_WIDTH);
+	printf("[%.*s%.*s] %3.0lf%%\n",
+			n, progress_equal,
+			PROGRESS_BAR_WIDTH - n, progress_space,
+			progress * 100.0);
+}
+
+// Clears the screen, prints all results, and prints the progress bar.
+static void update_progress(struct Result *results, size_t completed) {
 	clear_screen();
 	print_all_results(results);
+	print_progress_bar(completed);
 }
 
 // Tests the given problem function 'iters' times using the positive case
@@ -157,36 +180,40 @@ static enum State test_negative(ProblemFn function, int iters) {
 }
 
 // Tests the given exercise problem, with 'pos_iters' iterations for the
-// positive case and 'neg_iters' iterations for the negative case. Stores the
-// result in 'out'.
-static void test_problem(
-		struct Result *out, int problem, int pos_iters, int neg_iters) {
+// positive case and 'neg_iters' iterations for the negative case.
+static struct Result test_problem(int problem, int pos_iters, int neg_iters) {
 	ProblemFn function = get_problem_function(problem);
-	out->pos_state = test_positive(function, pos_iters);
-	out->neg_state = test_negative(function, neg_iters);
+	return (struct Result){
+		.pos_state = test_positive(function, pos_iters),
+		.neg_state = test_negative(function, neg_iters)
+	};
 }
 
 // Runs the tests specified by 'params' sequentially, storing results in the
-// 'results' array and printing them as tests complete.
+// 'results' array and printing them as tests complete. Clears the screen and
+// updates results periodically if 'params->interactive' is true.
 static void run_sequential(
 		const struct Parameters *params, struct Result *results) {
 	assert(params->problem == ALL_PROBLEMS);
 	assert(params->jobs == 1);
 
+	const int pos_iters = params->pos_iters;
+	const int neg_iters = params->neg_iters;
 	if (params->interactive) {
+		update_progress(results, 0);
 		for (size_t i = 0; i < N_PROBLEMS; i++) {
 			ProblemFn function = get_problem_function(INDEX_TO_PROBLEM(i));
-			results[i].pos_state = test_positive(function, params->pos_iters);
-			update_all_results(results);
-			results[i].neg_state = test_negative(function, params->neg_iters);
-			update_all_results(results);
+			results[i].pos_state = test_positive(function, pos_iters);
+			update_progress(results, i * 2 + 1);
+			results[i].neg_state = test_negative(function, neg_iters);
+			update_progress(results, i * 2 + 2);
 		}
 	} else {
 		print_header();
 		for (size_t i = 0; i < N_PROBLEMS; i++) {
-			test_problem(results + i,
-					INDEX_TO_PROBLEM(i), params->pos_iters, params->neg_iters);
-			print_result(INDEX_TO_PROBLEM(i), results[i]);
+			int problem = INDEX_TO_PROBLEM(i);
+			results[i] = test_problem(problem, pos_iters, neg_iters);
+			print_result(problem, results[i]);
 		}
 		print_summary(results);
 	}
@@ -196,17 +223,20 @@ static void run_sequential(
 static void *perform_task(void *arg) {
 	struct Task *task = (struct Task *)arg;
 	for (unsigned short i = task->start; i < task->end; i++) {
-		test_problem(task->results + i,
-				INDEX_TO_PROBLEM(i), task->pos_iters, task->neg_iters);
+		ProblemFn function = get_problem_function(INDEX_TO_PROBLEM(i));
+		task->results[i].pos_state = test_positive(function, task->pos_iters);
+		++*task->test_count;
+		task->results[i].neg_state = test_negative(function, task->neg_iters);
+		++*task->test_count;
+
 	}
-	--*task->tasks_left;
 	return NULL;
 }
 
 // Runs the tests specified by 'params' in parallel, storing results in the
-// 'results' array. Clears the screen and prints results periodically while jobs
-// are progressing if 'params->interactive' is true. If there was an pthread
-// error, prints an error message and returns false.
+// 'results' array. Clears the screen and updates results periodically while
+// jobs are progressing if 'params->interactive' is true. If there was an
+// pthread error, prints an error message and returns false.
 static bool run_parallel(
 		const struct Parameters *params, struct Result *results) {
 	assert(params->problem == ALL_PROBLEMS);
@@ -216,7 +246,7 @@ static bool run_parallel(
 	const unsigned short length = N_PROBLEMS / jobs;
 	pthread_t threads[jobs];
 	struct Task tasks[jobs];
-	atomic_ushort tasks_left = jobs;
+	atomic_ushort test_count = 0;
 
 	struct Task base_task = {
 		.start = 0,
@@ -224,7 +254,7 @@ static bool run_parallel(
 		.pos_iters = (unsigned short)params->pos_iters,
 		.neg_iters = (unsigned short)params->neg_iters,
 		.results = results,
-		.tasks_left = &tasks_left
+		.test_count = &test_count
 	};
 
 	// Create threads for the tasks.
@@ -241,11 +271,12 @@ static bool run_parallel(
 
 	// In interactive mode, update results until all tasks are finished.
 	if (params->interactive) {
-		while (tasks_left > 0) {
-			update_all_results(results);
+		unsigned short count;
+		while ((count = test_count) < N_TOTAL_TESTS) {
+			update_progress(results, count);
 			usleep(UPDATE_DELAY_MS * 1000);
 		}
-		update_all_results(results);
+		update_progress(results, count);
 	}
 
 	// Join all the threads and return.
@@ -267,8 +298,7 @@ bool run_tests(const struct Parameters *params) {
 
 	// Run tests synchronously if there is only one test to run.
 	if (params->problem != ALL_PROBLEMS) {
-		struct Result result;
-		test_problem(&result,
+		struct Result result = test_problem(
 				params->problem, params->pos_iters, params->neg_iters);
 		print_header();
 		print_result(params->problem, result);
@@ -289,7 +319,7 @@ bool run_tests(const struct Parameters *params) {
 		run_sequential(params, results);
 	} else if (!run_parallel(params, results)) {
 		free(results);
-		return 1;
+		return false;
 	}
 
 	// Close interactive mode if necessary and print the results.
@@ -303,7 +333,7 @@ bool run_tests(const struct Parameters *params) {
 	}
 
 	// Clean up and return.
-	bool success = all_results_good(results);
+	bool status = all_results_good(results);
 	free(results);
-	return success;
+	return status;
 }
