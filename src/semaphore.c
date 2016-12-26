@@ -4,8 +4,6 @@
 
 #include <unistd.h>
 
-static bool semaphores_enabled = true;
-
 Semaphore sema_create(long value, bool real_semaphore) {
 	if (real_semaphore) {
 		return dispatch_semaphore_create(value);
