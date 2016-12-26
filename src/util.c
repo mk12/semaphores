@@ -6,6 +6,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <unistd.h>
 
 // The name of the program.
 static const char *program_name = NULL;
@@ -47,7 +49,17 @@ bool parse_int(int *out, const char *str) {
 // Calls 'close_alt_screen' and then executes the default sigint handler.
 static void sigint_handler(int sig) {
 	close_alt_screen();
-	default_sigint_handler(sig);
+	// Calling the function pointer directly doesn't seem to work, but changing
+	// the handler back and re-raising the signal does work.
+	signal(sig, default_sigint_handler);
+	raise(sig);
+}
+
+void use_unbuffered_input(void) {
+	struct termios ctrl;
+	tcgetattr(STDIN_FILENO, &ctrl);
+	ctrl.c_lflag &= (unsigned long)~ICANON;
+	tcsetattr(STDIN_FILENO, TCSANOW, &ctrl);
 }
 
 void open_alt_screen(void) {
