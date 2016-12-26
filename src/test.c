@@ -210,7 +210,7 @@ static bool run_parallel(
 	assert(params->problem == ALL_PROBLEMS);
 	assert(params->jobs > 1);
 
-	const size_t jobs = (size_t)params->jobs;
+	const size_t jobs = (size_t)MIN(params->jobs, N_PROBLEMS);
 	const unsigned short length = N_PROBLEMS / jobs;
 	pthread_t threads[jobs];
 	struct Task tasks[jobs];
@@ -243,6 +243,7 @@ static bool run_parallel(
 			update_all_results(results);
 			usleep(UPDATE_DELAY_MS * 1000);
 		}
+		update_all_results(results);
 	}
 
 	// Join all the threads and return.
