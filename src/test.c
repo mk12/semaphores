@@ -303,6 +303,7 @@ bool run_tests(const struct Parameters *params) {
 	}
 
 	// Clean up and return.
+	bool success = all_results_good(results);
 	free(results);
-	return all_results_good(results);
+	return success;
 }
