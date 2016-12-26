@@ -2,12 +2,16 @@
 
 #include "util.h"
 
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 // The name of the program.
 static const char *program_name = NULL;
+
+// Function pointer for the default sigint handler.
+static void (*default_sigint_handler)(int) = NULL;
 
 void setup_util(const char *the_program_name) {
 	program_name = the_program_name;
@@ -38,4 +42,26 @@ bool parse_int(int *out, const char *str) {
 	}
 	*out = n;
 	return true;
+}
+
+// Calls 'close_alt_screen' and then executes the default sigint handler.
+static void sigint_handler(int sig) {
+	close_alt_screen();
+	default_sigint_handler(sig);
+}
+
+void open_alt_screen(void) {
+	default_sigint_handler = signal(SIGINT, sigint_handler);
+	fputs("\x1B[?1049h");
+	fflush(stdout);
+}
+
+void close_alt_screen(void) {
+	fputs("\x1B[?1049l");
+	fflush(stdout);
+}
+
+void clear_screen(void) {
+	fputs("\x1B[2J\x1B[H", stdout);
+	fflush(stdout);
 }

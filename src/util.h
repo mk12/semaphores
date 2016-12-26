@@ -20,4 +20,14 @@ void printf_error(const char *format, ...);
 // begins with an equals sign, it is ignored.
 bool parse_int(int *out, const char *str);
 
+// Opens the alternate terminal screen by printing an ANSI escape code. Also
+// registers a SIGINT handler to call 'close_alt_screen'.
+void open_alt_screen(void);
+
+// Closes the alternate terminal screen by printing an ANSI escape code.
+void close_alt_screen(void);
+
+// Prints ANSI escape codes to clear the screen.
+void clear_screen(void);
+
 #endif
