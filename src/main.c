@@ -26,17 +26,18 @@ static const char *const usage_message =
 	"usage: semaphores [options]\n"
 	"\n"
 	"  Default\n"
-	"    semaphores -t all -p " S(DEFAULT_POS_ITERS) " -n " S(DEFAULT_NEG_ITERS)
-		" -j " S(DEFAULT_JOBS) "\n"
+	"    semaphores -p " S(DEFAULT_POS_ITERS) " -n " S(DEFAULT_NEG_ITERS) " -j "
+		S(DEFAULT_JOBS) "\n"
 	"\n"
-	"  Options\n"
-	"    -t all  Test solutions to all problems\n"
-	"    -t N    Test solution to problem N (between 1 and " S(N_PROBLEMS) ")\n"
-	"    -p N    Test success with semaphores (positive case), N iterations\n"
-	"    -n N    Test failure without semaphores (negative case), N iterations\n"
-	"    -j N    Run N jobs in parallel\n"
-	"\n"
+	"  Test options\n"
+	"    -t N  Test only problem N (1 to " S(N_PROBLEMS) "), not all problems\n"
+	"    -p N  Test success with semaphores (positive case), N iterations\n"
+	"    -n N  Test failure without semaphores (negative case), N iterations\n"
 	"    Use -p0 to disable positive tests and -n0 to disable negative tests\n"
+	"\n"
+	"  Other options\n"
+	"    -j N  Run N jobs in parallel\n"
+	"    -i    Use interactive mode (display updates in alternate screen)\n"
 	"\n";
 
 #undef S
@@ -51,26 +52,20 @@ int main(int argc, char **argv) {
 
 	// Initialize the default parameters.
 	struct Parameters params = {
-		.problem = 0,
+		.problem = ALL_PROBLEMS,
 		.pos_iters = DEFAULT_POS_ITERS,
 		.neg_iters = DEFAULT_NEG_ITERS,
-		.jobs = DEFAULT_JOBS
+		.jobs = DEFAULT_JOBS,
+		.interactive = false
 	};
 
 	// Get command line options.
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "ht:p:n:j:")) != -1) {
+	while ((c = getopt(argc, argv, "t:p:n:fih")) != -1) {
 		switch (c) {
-		case 'h':
-			fputs(usage_message, stdout);
-			return 0;
 		case 't':
-			if (strcmp(optarg, "all") == 0 || strcmp(optarg, "=all") == 0) {
-				params.problem = 0;
-				break;
-			}
 			if (!parse_int(&params.problem, optarg)) {
 				return 1;
 			}
@@ -122,10 +117,21 @@ int main(int argc, char **argv) {
 				return 1;
 			}
 			break;
+		case 'i':
+			params.interactive = true;
+			break;
+		case 'h':
+			fputs(usage_message, stdout);
+			return 0;
 		case '?':
 			fputs(usage_message, stderr);
 			return 1;
 		}
+	}
+	// Check for invalid combiantions of options.
+	if (params.problem != ALL_PROBLEMS && params.interactive) {
+		printf_error("interactive mode cannot be used for single tests");
+		return 1;
 	}
 	// Make sure all arguments were processed.
 	if (optind != argc) {
