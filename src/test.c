@@ -120,6 +120,12 @@ static void print_all_results(struct Result *results) {
 	print_summary(results);
 }
 
+// Clears the screen and then calls 'print_all_results'.
+static void update_all_results(struct Result *results) {
+	clear_screen();
+	print_all_results(results);
+}
+
 // Tests the given problem function 'iters' times using the positive case
 // (success expected with semaphores enabled). Returns the resulting state.
 static enum State test_positive(ProblemFn function, int iters) {
@@ -180,11 +186,9 @@ static void run_sequential(
 		for (size_t i = 0; i < N_PROBLEMS; i++) {
 			ProblemFn function = get_problem_function(INDEX_TO_PROBLEM(i));
 			results[i].pos_state = test_positive(function, params->pos_iters);
-			clear_screen();
-			print_all_results(results);
+			update_all_results(results);
 			results[i].neg_state = test_negative(function, params->neg_iters);
-			clear_screen();
-			print_all_results(results);
+			update_all_results(results);
 		}
 	} else {
 		print_header();
@@ -228,8 +232,7 @@ static bool run_parallel(
 	// In interactive mode, update results until all tasks are finished.
 	if (params->interactive) {
 		while (tasks_left > 0) {
-			clear_screen();
-			print_all_results(results);
+			update_all_results(results);
 			usleep(UPDATE_DELAY_MS * 1000);
 		}
 	}
