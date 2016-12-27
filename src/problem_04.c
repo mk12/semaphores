@@ -4,6 +4,7 @@
 #include "semaphore.h"
 
 #include <pthread.h>
+#include <stdatomic.h>
 #include <stddef.h>
 
 #define N_THREADS 10
@@ -13,7 +14,7 @@ const char *const problem_04_name = "Multiplex";
 
 struct Data {
 	Semaphore multiplex;
-	int count;
+	atomic_int count;
 };
 
 static void *run(void *ptr) {
