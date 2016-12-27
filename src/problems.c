@@ -1,4 +1,4 @@
-// Copyright 2016 Mitchell Kember. Subject to the MIT License.
+// Copyright 2017 Mitchell Kember. Subject to the MIT License.
 
 #include "problems.h"
 
@@ -26,6 +26,7 @@ const char *get_problem_name(int n) {
 	case 14: return problem_14_name;
 	case 15: return problem_15_name;
 	case 16: return problem_16_name;
+	case 17: return problem_17_name;
 	default: return NULL;
 	}
 }
@@ -48,6 +49,7 @@ ProblemFn get_problem_function(int n) {
 	case 14: return problem_14;
 	case 15: return problem_15;
 	case 16: return problem_16;
+	case 17: return problem_17;
 	default: return NULL;
 	}
 }
