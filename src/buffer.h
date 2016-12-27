@@ -27,6 +27,9 @@ unsigned char buf_read(struct Buffer *buf, size_t i);
 // Writes the character 'c' at index 'buf->len', and increments 'buf->len'.
 void buf_push(struct Buffer *buf, unsigned char c);
 
+// Like 'buf_push2', but pushes two characters (atomically).
+void buf_push2(struct Buffer *buf, unsigned char c1, unsigned char c2);
+
 // Removes a character from the end of the buffer. Must be non-empty.
 unsigned char buf_pop(struct Buffer *buf);
 

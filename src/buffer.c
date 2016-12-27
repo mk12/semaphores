@@ -39,6 +39,17 @@ void buf_push(struct Buffer *buf, unsigned char c) {
 	pthread_mutex_unlock(&buf->mutex);
 }
 
+void buf_push2(struct Buffer *buf, unsigned char c1, unsigned char c2) {
+	pthread_mutex_lock(&buf->mutex);
+	if (buf->len < buf->cap) {
+		buf->arr[buf->len++] = c1;
+	}
+	if (buf->len < buf->cap) {
+		buf->arr[buf->len++] = c2;
+	}
+	pthread_mutex_unlock(&buf->mutex);
+}
+
 unsigned char buf_pop(struct Buffer *buf) {
 	pthread_mutex_lock(&buf->mutex);
 	unsigned char c;

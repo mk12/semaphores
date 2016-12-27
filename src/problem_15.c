@@ -46,8 +46,7 @@ static void *run_agent(void *ptr) {
 
 	sema_wait(d->agent);
 	delay();
-	buf_push(&d->log, 'A');
-	buf_push(&d->log, (unsigned char)n);
+	buf_push2(&d->log, 'A', (unsigned char)n);
 	for (size_t i = 0; i < N_INGREDIENTS; i++) {
 		if (i != n) {
 			sema_signal(d->ingredients[i]);
@@ -94,8 +93,7 @@ static void *run_smoker(void *ptr) {
 
 	sema_wait(d->push_ingredients[n]);
 	sema_signal(d->agent);
-	buf_push(&d->log, 'S');
-	buf_push(&d->log, (unsigned char)n);
+	buf_push2(&d->log, 'S', (unsigned char)n);
 
 	return NULL;
 }

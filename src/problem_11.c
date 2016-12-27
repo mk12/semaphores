@@ -35,8 +35,7 @@ static void *run_reader(void *ptr) {
 	increment(&d->readers);
 	sema_signal(d->mutex);
 
-	buf_push(&d->log, 'R');
-	buf_push(&d->log, (unsigned char)d->value);
+	buf_push2(&d->log, 'R', (unsigned char)d->value);
 
 	sema_wait(d->mutex);
 	decrement(&d->readers);
@@ -54,8 +53,7 @@ static void *run_writer(void *ptr) {
 	sema_wait(d->turnstile);
 	sema_wait(d->room_empty);
 	increment(&d->value);
-	buf_push(&d->log, 'W');
-	buf_push(&d->log, (unsigned char)d->value);
+	buf_push2(&d->log, 'W', (unsigned char)d->value);
 	sema_signal(d->room_empty);
 	sema_signal(d->turnstile);
 

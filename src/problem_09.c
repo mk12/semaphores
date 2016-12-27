@@ -31,8 +31,7 @@ static void *run_producer(void *ptr) {
 	sema_wait(d->mutex);
 	unsigned char item = d->next++;
 	buf_push(&d->buf, item);
-	buf_push(&d->log, 'P');
-	buf_push(&d->log, item);
+	buf_push2(&d->log, 'P', item);
 	sema_signal(d->mutex);
 	sema_signal(d->items);
 
@@ -45,8 +44,7 @@ static void *run_consumer(void *ptr) {
 	sema_wait(d->items);
 	sema_wait(d->mutex);
 	unsigned char item = buf_pop(&d->buf);
-	buf_push(&d->log, 'C');
-	buf_push(&d->log, item);
+	buf_push2(&d->log, 'C', item);
 	sema_signal(d->mutex);
 	sema_signal(d->spaces);
 
