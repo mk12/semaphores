@@ -25,13 +25,13 @@ static void *run(void *ptr) {
 
 	for (int i = 0; i < N_ITERATIONS; i++) {
 		sema_wait(d->mutex);
-		increment(&d->room1);
+		d->room1++;
 		sema_signal(d->mutex);
 
 		sema_wait(d->turnstile1);
-		increment(&d->room2);
+		d->room2++;
 		sema_wait(d->mutex);
-		decrement(&d->room1);
+		d->room1--;
 		if (d->room1 == 0) {
 			sema_signal(d->mutex);
 			sema_signal(d->turnstile2);
@@ -41,7 +41,7 @@ static void *run(void *ptr) {
 		}
 
 		sema_wait(d->turnstile2);
-		decrement(&d->room2);
+		d->room2--;
 
 		// Critical section.
 		increment(&d->count);
