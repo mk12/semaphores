@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 // Number of exercise problems done so far.
-#define N_PROBLEMS 15
+#define N_PROBLEMS 16
 
 // A function that executes an exercise problem, returning true on success. If
 // 'positive' is true, then it uses real semaphores. Otherwise, it uses dummy
