@@ -20,7 +20,7 @@ EXEC := $(BIN_DIR)/$(NAME)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(OBJ_DIR)/$*.d
 
 # Targets
-.PHONY: all release debug prep clean
+.PHONY: all release debug bench prep clean
 
 all: release
 
@@ -35,6 +35,9 @@ debug: prep $(EXEC)
 debug:
 	@echo "Target debug is up to date"
 
+bench: release
+	@bash bench.sh
+
 prep:
 	@mkdir -p $(OBJ_DIR) $(BIN_DIR)
 
@@ -43,10 +46,10 @@ clean:
 
 $(EXEC): $(OBJS)
 	@echo "\033[0;31mLinking executable $(NAME)\033[0m"
-	@$(CC) $(LDFLAGS) $^ -o $@
+	@$(CC) $^ -o $@ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "\033[0;32mCC\033[0m $<"
-	@$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
+	@$(CC) -c $< -o $@ $(CFLAGS) $(DEPFLAGS)
 
 -include $(DEPS)
