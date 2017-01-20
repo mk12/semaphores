@@ -6,7 +6,6 @@
 
 #include <pthread.h>
 #include <stddef.h>
-#include <string.h>
 
 enum Role {
 	AGENT,

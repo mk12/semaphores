@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 // Number of exercise problems done so far.
-#define N_PROBLEMS 17
+#define N_PROBLEMS 18
 
 // A function that executes an exercise problem, returning true on success. If
 // 'positive' is true, then it uses real semaphores. Otherwise, it uses dummy
@@ -31,6 +31,7 @@ extern const char *const problem_14_name;
 extern const char *const problem_15_name;
 extern const char *const problem_16_name;
 extern const char *const problem_17_name;
+extern const char *const problem_18_name;
 
 // Prototypes for exercise problem functions.
 bool problem_01(bool);
@@ -50,6 +51,7 @@ bool problem_14(bool);
 bool problem_15(bool);
 bool problem_16(bool);
 bool problem_17(bool);
+bool problem_18(bool);
 
 // Returns true if there is an exercise problem numbered 'n'.
 bool problem_in_range(int n);

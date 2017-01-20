@@ -6,7 +6,6 @@
 
 #include <pthread.h>
 #include <stddef.h>
-#include <string.h>
 
 #define N_COOKS 1
 #define N_SAVAGES 9
