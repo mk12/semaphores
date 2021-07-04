@@ -8,7 +8,7 @@ This repository contains my solutions to the exercises in [The Little Book of Se
 
 Just run `make`.
 
-It only builds on macOS, since I am using Apple's [Dispatch framework][dispatch] for the semaphores. I would have used [POSIX semaphores][posix], but the POSIX they are not fully implemented in macOS.
+It only builds on macOS, since I am using Apple's [Dispatch framework][dispatch] for the semaphores. I would have used [POSIX semaphores][posix], but they are not fully implemented in macOS.
 
 [dispatch]: https://developer.apple.com/reference/dispatch/dispatchsemaphore
 [posix]: https://linux.die.net/man/7/sem_overview
